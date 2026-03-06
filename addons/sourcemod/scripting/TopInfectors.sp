@@ -48,7 +48,7 @@ Handle g_hSpawnTimer[MAXPLAYERS + 1];
 bool g_bNemesis = false;
 bool g_bDynamicChannels = false;
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name            =       "Top Infectors",
 	author          =       "Nano, maxime1907, .Rushaway",
@@ -246,7 +246,7 @@ public Action Command_OnToggleStatus(int client, int args)
 // Purpose: Hooks
 //---------------------------------------
 
-public Action ZR_OnClientInfect(int &client, int &attacker, bool &motherInfect, bool &respawnOverride, bool &respawn) 
+public Action ZR_OnClientInfect(int &client, int &attacker, bool &motherInfect, bool &respawnOverride, bool &respawn)
 {
 	if (!IsValidZombie(attacker))
 	{
@@ -282,24 +282,24 @@ public void Event_OnClientDeath(Event hEvent, const char[] sEvent, bool bDontBro
 	}
 }
 
-public void Event_OnRoundStart(Event event, char[] name, bool dontBroadcast) 
+public void Event_OnRoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	RemoveAllHats();
 	Cleanup();
 }
 
-public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontbroadcast) 
+public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontbroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	if (!IsValidClient(client) || !IsPlayerAlive(client) || !ZR_IsClientHuman(client) || g_iTopInfector[client] <= -1)
 		return;
-	
+
 	delete g_hSpawnTimer[client];
 	g_hSpawnTimer[client] = CreateTimer(7.0, Timer_OnClientSpawnPost, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public void Event_OnRoundEnd(Event event, char[] name, bool dontBroadcast) 
+public void Event_OnRoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	// ZombieReloaded always fire a team win event before the draw event
 	// So we can ignore the draw event - Prevent duplicate execution
@@ -576,13 +576,13 @@ stock void RemoveAllHats()
 	}
 }
 
-void CreateHat(int client) 
-{ 
+void CreateHat(int client)
+{
 	RemoveHat(client);
 
 	if ((g_iSkullEntities[client] = EntIndexToEntRef(CreateEntityByName("prop_dynamic"))) == INVALID_ENT_REFERENCE)
 		return;
-	
+
 	int iSkullEntity = EntRefToEntIndex(g_iSkullEntities[client]);
 	SetEntityModel(iSkullEntity, SKULL_MODEL);
 
@@ -649,12 +649,6 @@ stock void GiveGrenadesToClient(int client, int iAmount, WeaponAmmoGrenadeType t
 	}
 }
 
-stock int GetClientGrenades(int client, WeaponAmmoGrenadeType type)
-{
-    int offsNades = FindDataMapInfo(client, "m_iAmmo") + (view_as<int>(type) * 4);
-    return GetEntData(client, offsNades);
-}
-
 stock bool HasPlayerItem(int client, const char[] weapon)
 {
 	int max = GetEntPropArraySize(client, Prop_Send, "m_hMyWeapons");
@@ -709,7 +703,7 @@ public int SortInfectorsList(int[] elem1, int[] elem2, const int[][] array, Hand
 	return 0;
 }
 
-bool IsValidZombie(int attacker) 
+bool IsValidZombie(int attacker)
 {
 	return (0 < attacker <= MaxClients && IsValidEntity(attacker) && IsClientInGame(attacker) && IsPlayerAlive(attacker));
 }
