@@ -618,7 +618,6 @@ void CreateHat(int client)
 stock void GiveGrenadesToClient(int client, int iAmount, WeaponAmmoGrenadeType type)
 {
 	char sWeapon[32];
-	int iAmmo = GetClientGrenades(client, type);
 	switch(type)
 	{
 		case GrenadeType_HEGrenade:
@@ -631,7 +630,7 @@ stock void GiveGrenadesToClient(int client, int iAmount, WeaponAmmoGrenadeType t
 			return;
 	}
 
-	if (iAmmo > 0)
+	if (HasPlayerItem(client, sWeapon))
 	{
 		int offsNades = FindDataMapInfo(client, "m_iAmmo") + (view_as<int>(type) * 4);
 		int count = GetEntData(client, offsNades);
@@ -654,6 +653,24 @@ stock int GetClientGrenades(int client, WeaponAmmoGrenadeType type)
 {
     int offsNades = FindDataMapInfo(client, "m_iAmmo") + (view_as<int>(type) * 4);
     return GetEntData(client, offsNades);
+}
+
+stock bool HasPlayerItem(int client, const char[] weapon)
+{
+	int max = GetEntPropArraySize(client, Prop_Send, "m_hMyWeapons");
+	for (int i = 0; i < max; i++)
+	{
+		int ent = GetEntPropEnt(client, Prop_Send, "m_hMyWeapons", i);
+		if (ent == -1)
+			continue;
+
+		char className[32];
+		GetEntityClassname(ent, className, sizeof(className));
+		if (strcmp(className, weapon, false) == 0)
+			return true;
+	}
+
+	return false;
 }
 
 stock int GetClientRank(int client)
