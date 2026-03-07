@@ -655,7 +655,7 @@ stock bool HasPlayerItem(int client, const char[] weapon)
 	for (int i = 0; i < max; i++)
 	{
 		int ent = GetEntPropEnt(client, Prop_Send, "m_hMyWeapons", i);
-		if (ent == -1)
+		if (ent == -1 || !IsValidEntity(ent))
 			continue;
 
 		char className[32];
@@ -739,3 +739,4 @@ public void Nemesis_OnConfigVerified(bool configExists)
 	g_bNemesis = configExists;
 }
 #endif
+
